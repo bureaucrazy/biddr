@@ -1,0 +1,24 @@
+@import "font-awesome";
+
+@import "site_variables";
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+
+.simple_form {
+  // This will remove the underline below the 'required' asterisk
+  abbr {
+    border-bottom: 0;
+  }
+  // This will make the checkboxes horizontal
+  .check_boxes {
+    .checkbox {
+      display: inline-block;
+      margin-right: 10px;
+      input {
+        margin-left: -14px;
+      }
+    }
+  }
+}
