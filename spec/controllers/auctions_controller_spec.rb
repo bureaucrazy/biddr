@@ -23,18 +23,35 @@ RSpec.describe AuctionsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Auction. As you add validations to Auction, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
+  # let(:valid_attributes) {
+  #   skip("Add a hash of attributes valid for your model")
+  # }
+  # let(:invalid_attributes) {
+  #   skip("Add a hash of attributes invalid for your model")
+  # }
 
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
-  }
+  # -------------- final exam --------------
+  let(:valid_attributes) { {title: 'Toy Car for Sale.',
+                            details: 'BNWT in original case.',
+                            end_date: (Time.now + 2.days),
+                            reserve_price: 100} }
+  let(:invalid_attributes) { {title: 'Toy Car for Sale.',
+                              details: 'BNWT in original case.',
+                              end_date: (Time.now + 2.days),
+                              reserve_price: 0} }
+  # ----------------------------------------
+
+
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # AuctionsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
+
+  # -------------- final exam --------------
+  let(:auction) { create(:auction, user: user) }
+  let(:bid) { create(:bid, user: user) }
+  # ----------------------------------------
 
   describe "GET #index" do
     it "assigns all auctions as @auctions" do
@@ -58,6 +75,20 @@ RSpec.describe AuctionsController, type: :controller do
       expect(assigns(:auction)).to be_a_new(Auction)
     end
   end
+
+# -------------- final exam --------------
+  describe "#new" do
+    it "renders the new auction template" do
+      get :new
+      expect(response).to render_template(:new)
+    end
+
+    it "instantiates a new auction object" do
+      get :new
+      expect(assigns(:auction)).to be_a_new(Auction)
+    end
+  end
+# ----------------------------------------
 
   describe "GET #edit" do
     it "assigns the requested auction as @auction" do
@@ -99,6 +130,28 @@ RSpec.describe AuctionsController, type: :controller do
       end
     end
   end
+
+  # -------------- final exam --------------
+  describe "#create" do
+    def valid_request
+      post :create, {:auction => valid_attributes}
+    end
+
+    it "creates an auction in the database" do
+      expect { valid_request }.to change { Auction.count }.by(1)
+    end
+
+    it "redirects to auction show page" do
+      valid_request
+      expect(response).to redirect_to auction_path(Auction.last)
+    end
+
+    it "sets a flash message" do
+      valid_request
+      expect(flash[:notice]).to be
+    end
+  end
+  # ----------------------------------------
 
   describe "PUT #update" do
     context "with valid params" do
