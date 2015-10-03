@@ -1,33 +1,10 @@
-<%= form_for(@auction) do |f| %>
-  <% if @auction.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@auction.errors.count, "error") %> prohibited this auction from being saved:</h2>
-
-      <ul>
-      <% @auction.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :title %><br>
-    <%= f.text_field :title %>
-  </div>
-  <div class="field">
-    <%= f.label :details %><br>
-    <%= f.text_area :details %>
-  </div>
-  <div class="field">
-    <%= f.label :end_date %><br>
-    <%= f.datetime_select :end_date %>
-  </div>
-  <div class="field">
-    <%= f.label :reserve_price %><br>
-    <%= f.number_field :reserve_price %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
+<%= simple_form_for (@auction || Auction.new), html: {class: "form-horizontal"} do |f| %>
+  <%= f.input :title, input_html: {placeholder: "Maximum 50 characters."} %>
+  <%= f.input :details, input_html: {placeholder: "Describe your item."} %>
+  <%= f.input :end_date %>
+  <%= f.input :reserve_price  %>
+  <div class="form-group">
+    <%= f.button :submit, class: "btn-primary", data: {disable_with: "saving.."} %>
+    <%= link_to "Cancel", :back, {:class=>"btn btn-default"} %>
   </div>
 <% end %>

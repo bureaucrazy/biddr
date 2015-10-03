@@ -1,9 +1,22 @@
 Rails.application.routes.draw do
   resources :bids
-  resources :users
+  resources :auctions
+
+  resources :users, only: [:new, :create] do
+    get :edit, on: :collection
+    patch :update, on: :collection
+  end
+
+  resources :sessions, only: [:new, :create] do
+    # this will create for us a route with DELETE http verb and /sessions
+    # adding the on: :collection option will make it part of the routes for
+    # sessions, which means it won't prepend the routes with /sessions/:session_id
+    delete :destroy, on: :collection
+  end
+
+
   get 'welcome/index'
   root 'welcome#index'
-  resources :auctions
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

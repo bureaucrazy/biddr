@@ -1,14 +1,17 @@
-<%= simple_form_for(@user) do |f| %>
-  <%= f.error_notification %>
+<%= simple_form_for @user, url: users_path do |f| %>
+  <%= f.input :first_name %>
+  <%= f.input :last_name %>
+  <%= f.input :email %>
 
-  <div class="form-inputs">
-    <%= f.input :first_name %>
-    <%= f.input :last_name %>
-    <%= f.input :email %>
-    <%= f.input :password_digest %>
+  <% if @user.persisted? %>
+    <%= f.input :current_password %>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.input :password %>
+    <%= f.input :password_confirmation %>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit %>
+  <div class="form-group">
+    <%= f.submit "Sign Up", class: "btn-primary" %>
   </div>
 <% end %>

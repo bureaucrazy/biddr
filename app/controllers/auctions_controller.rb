@@ -1,15 +1,24 @@
 class AuctionsController < ApplicationController
+  before_action :authenticate_user!, except: [:show, :index]
   before_action :set_auction, only: [:show, :edit, :update, :destroy]
 
   # GET /auctions
   # GET /auctions.json
   def index
-    @auctions = Auction.all
+    if params[:show_my_auctions]
+      @auctions = Auction.where("user_id = ?", current_user)
+    elsif params[:show_my_bids]
+      # @auctions = Auction.where("user_id = ?", current_user)
+      @auctions = Bid.search(current_user)
+    else
+      @auctions = Auction.all
+    end
   end
 
   # GET /auctions/1
   # GET /auctions/1.json
   def show
+    @place_bid = params[:place_bid]
   end
 
   # GET /auctions/new
@@ -25,7 +34,7 @@ class AuctionsController < ApplicationController
   # POST /auctions.json
   def create
     @auction = Auction.new(auction_params)
-
+    @auction.user = current_user
     respond_to do |format|
       if @auction.save
         format.html { redirect_to @auction, notice: 'Auction was successfully created.' }
@@ -62,6 +71,7 @@ class AuctionsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_auction
       @auction = Auction.find(params[:id])

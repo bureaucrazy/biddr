@@ -7,13 +7,12 @@
 
 <p>
   <strong>User:</strong>
-  <%= @bid.user %>
+  <%= @bid.user.first_name %>
 </p>
 
 <p>
   <strong>Auction:</strong>
-  <%= @bid.auction %>
+  <%= @bid.auction.title %>
 </p>
 
-<%= link_to 'Edit', edit_bid_path(@bid) %> |
-<%= link_to 'Back', bids_path %>
+<%= link_to "Return", auctions_path, {:class=>"btn btn-default"} %>
