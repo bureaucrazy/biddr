@@ -1,36 +1,38 @@
-<p id="notice"><%= notice %></p>
+<div class="row">
+  <div class="col-xs-6">
+    <p><strong>Title: </strong><%= @auction.title %></p>
+    <p><strong>Details: </strong><%= @auction.details %></p>
+    <p><strong>End date: </strong><%= @auction.end_date.to_date %></p>
 
-<p>
-  <strong>Title:</strong>
-  <%= @auction.title %>
-</p>
-
-<p>
-  <strong>Details:</strong>
-  <%= @auction.details %>
-</p>
-
-<p>
-  <strong>End date:</strong>
-  <%= @auction.end_date %>
-</p>
-
-<%# if @auction.id != current_user.id %>
-<% if @place_bid %>
-  <p>
-    <%= simple_form_for (@bid || Bid.new), html: {class: "form-horizontal"} do |f| %>
-      <%= f.input :price, :value => @auction.current_price %>
-      <%= f.hidden_field :user_id, :value => current_user.id %>
-      <%= f.hidden_field :auction_id, :value => @auction.id %>
-      <div class="form-group">
-        <%= f.button :submit, class: "btn-primary", data: {disable_with: "saving.."} %>
-        <%= link_to "Cancel", :back, {:class=>"btn btn-default"} %>
-      </div>
+    <% if !@place_bid %>
+      <p><strong>Reserve price: </strong><%= @auction.reserve_price %></p>
     <% end %>
-  </p>
-<% else %>
-  <p>
-    <strong>Reserve price:</strong>
-    <%= @auction.reserve_price %>
-  </p>
-<% end %>
+  </div>
+
+  <div class="col-xs-6">
+    <p><strong>Current Price: </strong>$ <%= @auction.current_price %></p>
+    <p><strong>Reserve price <%= "not" unless @auction.current_price >= @auction.reserve_price %> met.</strong></p>
+    <% if @place_bid %>
+      <%= simple_form_for (@bid || Bid.new) do |f| %>
+        <%= f.input :price, :value => @auction.current_price %>
+        <%= f.hidden_field :user_id, :value => current_user.id %>
+        <%= f.hidden_field :auction_id, :value => @auction.id %>
+        <div class="form-group">
+          <%= f.button :submit, class: "btn-primary", data: {disable_with: "saving.."} %>
+          <%= link_to "Cancel", :back, {:class=>"btn btn-default"} %>
+        </div>
+      <% end %>
+    <% end %>
+    <br/>
+    <div>
+      <strong>Previous bids</strong>
+      <ul>
+        <% @auction.bids.each do |bid| %>
+          <li>
+            $ <%= bid.price %> at <%= bid.created_at.to_date %> by <%= bid.user.first_name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

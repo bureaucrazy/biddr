@@ -4,7 +4,9 @@ class BidsController < ApplicationController
   # GET /bids
   # GET /bids.json
   def index
-    @bids = Bid.where("user_id = ?", current_user.id)
+    if @bids
+      @bids = Bid.where("user_id = ?", current_user.id)
+    end
   end
 
   # GET /bids/1
@@ -25,14 +27,22 @@ class BidsController < ApplicationController
   # POST /bids.json
   def create
     @bid = Bid.new(bid_params)
-    respond_to do |format|
-      if @bid.save
-        format.html { redirect_to @bid, notice: 'Bid was successfully created.' }
-        format.json { render :show, status: :created, location: @bid }
-      else
-        format.html { render :new }
-        format.json { render json: @bid.errors, status: :unprocessable_entity }
+    bid_price = bid_params[:price]
+    if bid_price.to_i > @bid.auction.current_price
+      @bid.auction.current_price = bid_price.to_i + 1
+      @bid.auction.save
+      respond_to do |format|
+        if @bid.save
+          format.html { redirect_to @bid, notice: 'Bid was successfully created.' }
+          format.json { render :show, status: :created, location: @bid }
+        else
+          format.html { render :new }
+          format.json { render json: @bid.errors, status: :unprocessable_entity }
+        end
       end
+    else
+      format.html { render :new }
+      format.json { render json: @bid.errors, status: :unprocessable_entity }
     end
   end
 

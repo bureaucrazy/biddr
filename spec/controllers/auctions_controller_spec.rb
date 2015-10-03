@@ -31,14 +31,20 @@ RSpec.describe AuctionsController, type: :controller do
   # }
 
   # -------------- final exam --------------
+  let(:user) { {id: 1,
+                first_name: 'Bob',
+                email: 'bob@email.com',
+                password: 'supersecret'} }
   let(:valid_attributes) { {title: 'Toy Car for Sale.',
                             details: 'BNWT in original case.',
                             end_date: (Time.now + 2.days),
-                            reserve_price: 100} }
+                            reserve_price: 100,
+                            user_id: user[:id]} }
   let(:invalid_attributes) { {title: 'Toy Car for Sale.',
                               details: 'BNWT in original case.',
-                              end_date: (Time.now + 2.days),
-                              reserve_price: 0} }
+                              end_date: (Time.now + 2.days).to_datetime,
+                              reserve_price: 0,
+                              user_id: user[:id]} }
   # ----------------------------------------
 
 
@@ -47,11 +53,6 @@ RSpec.describe AuctionsController, type: :controller do
   # in order to pass any filters (e.g. authentication) defined in
   # AuctionsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
-
-  # -------------- final exam --------------
-  let(:auction) { create(:auction, user: user) }
-  let(:bid) { create(:bid, user: user) }
-  # ----------------------------------------
 
   describe "GET #index" do
     it "assigns all auctions as @auctions" do
@@ -138,6 +139,7 @@ RSpec.describe AuctionsController, type: :controller do
     end
 
     it "creates an auction in the database" do
+      binding.pry
       expect { valid_request }.to change { Auction.count }.by(1)
     end
 

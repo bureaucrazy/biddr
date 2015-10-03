@@ -1,8 +1,8 @@
-<%= simple_form_for (@auction || Auction.new), html: {class: "form-horizontal"} do |f| %>
+<%= simple_form_for (@auction || Auction.new) do |f| %>
   <%= f.input :title, input_html: {placeholder: "Maximum 50 characters."} %>
   <%= f.input :details, input_html: {placeholder: "Describe your item."} %>
-  <%= f.input :end_date %>
-  <%= f.input :reserve_price  %>
+  <%= f.input :end_date, as: :date %>
+  <%= f.input :reserve_price %>
   <div class="form-group">
     <%= f.button :submit, class: "btn-primary", data: {disable_with: "saving.."} %>
     <%= link_to "Cancel", :back, {:class=>"btn btn-default"} %>
